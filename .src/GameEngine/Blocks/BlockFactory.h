@@ -6,7 +6,7 @@
 #include <mutex>
 
 #include "IStaticBlock.h"
-#include "Logger.h"
+#include "ILogger.h"
 
 /**
  * @brief Custom hash function for @ref BlockType enumeration.
@@ -58,6 +58,8 @@ private:
      */
     inline static std::mutex factoryMutex_;
 
+    inline static ILogger *logger;
+
 private:
     /**
      * @brief Private default constructor — prevents instantiation.
@@ -76,6 +78,11 @@ private:
     BlockFactory &operator=(BlockFactory &&) = delete;
 
 public:
+    static void ProvideLogger(ILogger *logger_)
+    {
+        logger = logger_;
+    }
+
     /**
      * @brief Registers a static block type.
      *
@@ -179,7 +186,14 @@ public:
      */
     static void LogRegistrationSummary()
     {
-        Logger::Instance().Info(
-            "[BlockFactory] 📦 Registered blocks: " + std::to_string(GetStaticCount()) + " static, " + std::to_string(GetDynamicCount()) + " dynamic");
+        if (logger)
+        {
+            logger->Info(
+                "[BlockFactory] 📦 Registered blocks: " +
+                std::to_string(GetStaticCount()) +
+                " static, " +
+                std::to_string(GetDynamicCount()) +
+                " dynamic");
+        }
     }
 };

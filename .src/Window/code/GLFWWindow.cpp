@@ -72,7 +72,7 @@ bool GLFWWindow::IsVSyncEnabled() const {
 }
 
 void GLFWWindow::SetWindowMode(WindowMode mode) {
-    if (mode == mode_) return; // уже в нужном режиме
+    if (mode == mode_) return;
     mode_ = mode;
     ApplyWindowMode(mode_);
 }

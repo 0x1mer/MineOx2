@@ -4,12 +4,10 @@
 #include "Options.h"
 #include "BlocksIncluder.h" // Регистрирует все блоки
 #include "BlockJsonDataCache.h"
+#include "ImageData.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-
-#include <stb_image.h>
-#include <stb_image_write.h>
+#include <stbImage/stb_image_write.h>
 
 int main()
 {
@@ -41,6 +39,7 @@ int main()
     // --------------------------------------------------------------
     // 🧪 ТЕСТИРУЕМ BlockFactory
     // --------------------------------------------------------------
+    BlockFactory::ProvideLogger(&logger);
     BlockFactory::LogRegistrationSummary();
     logger.Info("Testing BlockFactory registration...");
 

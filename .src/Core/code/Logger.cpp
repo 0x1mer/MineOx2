@@ -2,6 +2,8 @@
 
 #include <filesystem>
 
+#include "DebugColors.h"
+
 Logger::Logger(LogLevel level, LogOutput output)
     : m_logLevel(level), m_output(output) {}
 
@@ -57,11 +59,11 @@ void Logger::Log(LogLevel level, std::string_view message) {
     std::string levelStr = LevelToString(level);
     const char* color = LevelColor(level);
 
-    std::string formatted = "[" + timestamp + "][" + levelStr + "] " + std::string(message);
+    std::string formatted = "[" + timestamp + "] [" + levelStr + "] " + std::string(message);
 
     // Console output
     if (m_output == LogOutput::Console || m_output == LogOutput::Both) {
-        std::cout << color << formatted << "\033[0m" << std::endl;
+        std::cout << color << formatted << DebugColors::Reset << std::endl;
     }
 
     // File output
@@ -88,25 +90,25 @@ std::string Logger::GetTimeStamp() const {
 
 std::string Logger::LevelToString(LogLevel level) const {
     switch (level) {
-        case LogLevel::Trace: return "TRACE";
-        case LogLevel::Debug: return "DEBUG";
-        case LogLevel::Info: return "INFO";
-        case LogLevel::Warning: return "WARN";
-        case LogLevel::Error: return "ERROR";
+        case LogLevel::Trace:    return "TRACE";
+        case LogLevel::Debug:    return "DEBUG";
+        case LogLevel::Info:     return "INFO";
+        case LogLevel::Warning:  return "WARN";
+        case LogLevel::Error:    return "ERROR";
         case LogLevel::Critical: return "CRIT";
-        default: return "UNKNOWN";
+        default:                 return "UNKNOWN";
     }
 }
 
 const char* Logger::LevelColor(LogLevel level) const {
     switch (level) {
-        case LogLevel::Trace: return "\033[37m";  // white
-        case LogLevel::Debug: return "\033[36m";  // cyan
-        case LogLevel::Info: return "\033[32m";   // green
-        case LogLevel::Warning: return "\033[33m"; // yellow
-        case LogLevel::Error: return "\033[31m";   // red
-        case LogLevel::Critical: return "\033[1;31m"; // bold red
-        default: return "\033[0m";
+        case LogLevel::Trace:    return DebugColors::White;     // white
+        case LogLevel::Debug:    return DebugColors::Cyan;      // cyan
+        case LogLevel::Info:     return DebugColors::Green;     // green
+        case LogLevel::Warning:  return DebugColors::Yellow;    // yellow
+        case LogLevel::Error:    return DebugColors::Red;       // red
+        case LogLevel::Critical: return DebugColors::BrightRed; // bright red
+        default:                 return DebugColors::White;
     }
 }
 
@@ -117,7 +119,6 @@ void Logger::CleanupOldLogs(const std::string& folderPath, size_t maxLogs) {
 
         std::vector<std::pair<std::filesystem::path, std::filesystem::file_time_type>> logs;
 
-        // Собираем все файлы логов
         for (auto& entry : std::filesystem::directory_iterator(folderPath)) {
             if (entry.is_regular_file()) {
                 const auto& path = entry.path();

@@ -6,8 +6,10 @@
 #include <utility> // std::pair
 
 struct TextureRegion {
-    glm::vec2 uvMin;
-    glm::vec2 uvMax;
+    float u0;
+    float v0;
+    float u1;
+    float v1;
 };
 
 class IBlockTextureAtlasBuilder {
@@ -18,6 +20,8 @@ public:
                             const std::filesystem::path& texturePath) = 0;
 
     virtual void BuildAtlas() = 0;
+
+    virtual void RemoveTexture(const std::string& textureName) = 0;
 
     virtual void SaveAtlas(const std::filesystem::path& outputPath) const = 0;
 

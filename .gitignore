@@ -17,5 +17,7 @@
 *.sdf
 *.opensdf
 
+/include/
+
 .DS_Store
 Thumbs.db
